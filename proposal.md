@@ -24,11 +24,12 @@ For the wrangling stage of the project, all the toxicity test results were caste
 
 ### Section 3: Research questions and usage scenarios
 #### The research question
-What concerns us most is the people died from overdose. How should we describe them? Thus, we would like to raise the research question as:
+What concerns us most is the people died from overdose. How should we describe them? Thus, we would like to raise the research questions as: 
 
-*Who are the people who died the most from drug overdose?*
+**Who are the people who died the most from drug overdose? **
+**Which drug killed them most?**
 
-And we will answer these questions from several aspects: age, gender, ethnicity, and places people were found death.
+*For the first question, we will answer from several aspects: age, gender, ethnicity, and places people were found death.*
 
 #### Usage scenario
 Mark is a social worker who helps drug addicts. He is interested in the location’s addicts were found dead. He wants to know what these people are more likely to be, so they could come up with better protective measures for them. For example, he notices some people still died even they were under care in the hospital. So, he would like to identify what these people are like, thus, in the future, they can pay more attention to them to prevent more deaths from drug overdose. When Mark logs on to the “Drug Overdose Observation App”, he could select the places people found death first. Then, he can explore several variables: age, gender, and ethnicity. By choosing one variable, he can see the distribution under this variable. So, Mark can take notes on what kind of people were died the most on one scenario. He can also choose variable combinations to see a combined result. During the investigation, Mark finds that Asian men aged from 50-55 were mostly died from drug overdose in the hospital. According to this result, he thinks they would need more medical care and looking after. Thus, he decides to call on more co-workers to pay attention to addicts who satisfy this description in the hospital.
