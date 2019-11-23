@@ -1,4 +1,8 @@
 # DSCI_532_Group_113_Overdose
-This is an app developed by Group 113.
-Added by Hanying.
+ 
+## Sketch
+
+**Skecth representation**
+
+![](imgs/532_Group-133-sketch.jpg)
 
