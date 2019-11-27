@@ -149,7 +149,7 @@ content = dbc.Container([
                     
                     dbc.Col(        
                         dcc.Dropdown(
-                        id='dd-chart-y',
+                        id='dd-chart-race',
                         options=[
                             {'label': 'Black', 'value': 'Black'},
                             {'label': 'White', 'value': 'White'},
@@ -162,7 +162,7 @@ content = dbc.Container([
                             {'label': 'Other', 'value': 'Other'},
                             {'label': 'Chinese', 'value': 'Chinese'},
                             {'label': 'Native American, Other', 'value': 'Native American, Other'},
-                            {'label': 'Hawaiian', 'value': 'Hawaiian,'}
+                            
                         ],
                         value='Black'
                         ), width=2
@@ -182,7 +182,7 @@ app.layout = html.Div([jumbotron,
 
 @app.callback(
     dash.dependencies.Output('plot', 'srcDoc'),
-    [dash.dependencies.Input('dd-chart-x', 'value')])
+    [dash.dependencies.Input('dd-chart-race', 'value')])
 def update_plot(race_name):
     '''
     Takes in an xaxis_column_name and calls make_plot to update our Altair figure
