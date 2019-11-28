@@ -18,7 +18,7 @@ app.config['suppress_callback_exceptions'] = True
 server = app.server
 app.title = 'Dash app with pure Altair HTML'
 
-def make_plot(race='Black'):
+def make_plot(race='Black',place ='Hospital'):
     # Don't forget to include imports
 
     def mds_special():
@@ -86,15 +86,21 @@ def make_plot(race='Black'):
 # alt.data_transformers.enable('json')
     alt.data_transformers.disable_max_rows()
 
+#################################################################### READING THE DATA #########################################################################################
+    drug_overdose_wrangled_m = pd.read_csv("../data/2012-2018_lab4_data_drug-overdose-deaths-connecticut-wrangled-melted.csv")  # FOR THE BAR CHART
 
-    drug_overdose_wrangled_m = pd.read_csv("../data/2012-2018_lab4_data_drug-overdose-deaths-connecticut-wrangled-melted.csv") 
+    drug_overdose_wrangled_p = pd.read_csv("../data/2012-2018_lab4_data_drug-overdose-deaths-connecticut-wrangled-pivot.csv")   # FOR THE LINE CHART
 
+##################################################################### FILTERING BY race and place of death ####################################################################
+####################################### HERE is Where we are taking the inputs of the function to update the data ##############################################################
+    by_race_place = drug_overdose_wrangled_m[(drug_overdose_wrangled_m['Race']==race) & (drug_overdose_wrangled_m['Location']==place)] # FOR THE BAR CHART
+    by_race_place_p = drug_overdose_wrangled_p[(drug_overdose_wrangled_p['Race']==race) & (drug_overdose_wrangled_p['Location']==place)] # FOR THE LINE CHART
 
-    by_ethnic_group = drug_overdose_wrangled_m[drug_overdose_wrangled_m['Race']==race]
-
-
-    drug_overdose_mpdrug = by_ethnic_group.groupby(['Drug']).sum().drop(columns = 'Age')\
+    # WRANGLING 
+    drug_overdose_mpdrug = by_race_place.groupby(['Drug']).sum().drop(columns = 'Age')\
                                                .sort_values('Toxicity_test', ascending = False).reset_index()
+
+######################### BAR PLOT using the filtered data ################################                                         
 
     mp_drug = alt.Chart(drug_overdose_mpdrug).mark_bar(
                   opacity=0.8,
@@ -105,20 +111,34 @@ def make_plot(race='Black'):
                   tooltip = [alt.Tooltip('Drug', title = 'Drug'), 
                              alt.Tooltip('Toxicity_test', title = 'Positives')]
               ).properties(
-                  width = 70,
+                  width = 200,
                   height = 400,
                   title = 'Drugs in test'
               )
+    ######################### LINE PLOT  filtered data ###################################### 
+    trend_AFTER = alt.Chart(by_race_place_p).mark_line(point = True).encode(
+            alt.X('year(Date):O', title = 'Reported year of death'),
+            alt.Y('count()', title = 'Count of people', scale = alt.Scale(domain=(0, 2000))),
+            tooltip = [alt.Tooltip('year(Date)', title = 'Year'),
+                       alt.Tooltip('count()', title = 'Count of people')]
+        ).properties(
+            width = 200,
+            height = 400,
+            title = "  Trend") 
 
-    return (mp_drug)
+    return (mp_drug|trend_AFTER)
 
+
+ ############################ dbc section #####################################
+
+ # IMAGE ON THE TOP
 jumbotron = dbc.Jumbotron(
     [
         dbc.Container(
             [
-                html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Unico_Anello.png/1920px-Unico_Anello.png', 
+                html.Img(src='https://live.staticflickr.com/2414/2133362573_04f6bd053f_b.jpg', 
                       width='100px'),
-                html.H1("Drug overdose : by race", className="display-3"),
+                html.H1("Drug overdose deaths in Connecticut US", className="display-6"),
                 html.P(
                     "Add a description of the dashboard",
                     className="lead",
@@ -130,9 +150,11 @@ jumbotron = dbc.Jumbotron(
     fluid=True,
 )
 
+#### THE LOGO, NOT USED we can embed an image of staic plot here ###################
 logo = dbc.Row(dbc.Col(html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Unico_Anello.png/1920px-Unico_Anello.png', 
                       width='15%'), width=4))
 
+##### THE content, the Iframe and the dropdown
 content = dbc.Container([
     dbc.Row(
                 [dbc.Col(
@@ -145,7 +167,7 @@ content = dbc.Container([
                         ################ The magic happens here
                         srcDoc=make_plot().to_html()
                         ################ The magic happens here
-                        ),width='6'),
+                        ),width='8'),
                     
                     dbc.Col(        
                         dcc.Dropdown(
@@ -164,30 +186,52 @@ content = dbc.Container([
                             {'label': 'Native American, Other', 'value': 'Native American, Other'},
                             
                         ],
-                        value='Black'
-                        ), width=2
-                    )
+                        value='White'
+                        ), width=2),
+
+                    dbc.Col(        
+                        dcc.Dropdown(
+                        id='dd-chart-place',
+                        options=[
+                            {'label': 'Hospital', 'value': 'Hospital'},
+                            {'label': 'Residence', 'value': 'Residence'},
+                            {'label': 'Other', 'value': 'Other'},
+                            {'label': 'Nursing Home', 'value': 'Nursing Home'},
+                            {'label': 'No description', 'value': 'No description'},
+                            {'label': 'Convalescent Home', 'value': 'Convalescent Home'},
+                            {'label': 'Hospice', 'value': 'Hospice'}
+                            
+                        ],
+                        value='Residence'
+                        ), width=2)
+                  
                 ]
             )
     ]
 )
 
 
+##### THE Footer
 footer = dbc.Container([dbc.Row(dbc.Col(html.P('UBC-MDS'))),
          ])
 
+## THE general lay out, indclude logo here from above if desired 
 app.layout = html.Div([jumbotron,
                        content,
                        footer])
 
+## THE callback
 @app.callback(
     dash.dependencies.Output('plot', 'srcDoc'),
-    [dash.dependencies.Input('dd-chart-race', 'value')])
-def update_plot(race_name):
+    [dash.dependencies.Input('dd-chart-race', 'value'),
+    dash.dependencies.Input('dd-chart-place', 'value')])
+
+## updating the make plot function after callback get the updated values from the users
+def update_plot(race_name,place_name):
     '''
     Takes in an xaxis_column_name and calls make_plot to update our Altair figure
     '''
-    updated_plot = make_plot(race_name).to_html()
+    updated_plot = make_plot(race_name,place_name).to_html()
     return updated_plot
 
 if __name__ == '__main__':
