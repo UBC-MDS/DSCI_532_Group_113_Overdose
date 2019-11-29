@@ -117,13 +117,13 @@ def make_trend(race = 'Everything', place = 'Everything'):
         by_race_place_p = pivoted_data[( pivoted_data['Race']==race) & ( pivoted_data['Location']==place)] # FOR THE LINE CHART
 
     trend_AFTER = alt.Chart(by_race_place_p).mark_line(color = "#140040", point = True).encode(
-            alt.X('year(Date):O', title = ''),
-            alt.Y('count()', title = ''),
+            alt.X('year(Date):O', title = 'Year'),
+            alt.Y('count()', title = 'Count'),
             tooltip = [alt.Tooltip('year(Date)', title = 'Year'),
                        alt.Tooltip('count()', title = 'Count of people')]
         ).properties(
-            width = 500,
-            height = 100,
+            width = 430,
+            height = 200,
             title = "  Trend") 
 
     return (trend_AFTER)
@@ -137,8 +137,8 @@ def make_race(drug_name = base_drug):
     ).properties(title='Race distribution for ' + drug_name, width=400, height=180) 
     return race
 
-overdose_title = html.H3("Overdash - Accidental overdose victims and the drugs that killed them",className="uppercase title",)
-overdose_title_span = html.Span("A dashboard about accidental overdose deaths in Connecticut from 2012 to 2018")
+overdose_title = html.H3("Overdash - Accidental overdose victims by drugs type ",className="uppercase title",)
+overdose_title_span = html.Span("A dashboard showing deaths by accidental overdose in Connecticut from 2012 to 2018")
 overdose_combination_chart = html.Iframe(sandbox='allow-scripts',
                                             id='plot',
                                             height='650',
@@ -152,7 +152,7 @@ overdose_dropdown_1 =   dcc.Dropdown(
                             options=[{"label": i, "value": i} for i in description_df['Drug']],
                         )
 
-main_text = 'From 2012 to 2018, '+ str(number_of_people) +' died from accidental overdose in Connecticut. This dashboard was created to understand thi issues.'
+main_text = 'From 2012 to 2018, '+ str(number_of_people) +' deaths occurred due to accidental overdose in Connecticut. This dashboard was created with the intent to provide a visual representation of the crisis'
 
 def set_image(drug = base_drug):
     img_link = description_df.loc[description_df['Drug'] == drug, 'Link'].iloc[0]
@@ -183,30 +183,84 @@ overdose_displacement = html.Div([
                                             dbc.Row([html.P("    ", id="blank_space_2")]),
                                             dbc.Row([html.P(main_text, id="problem_desc")]),
                                             dbc.Row()
-                                            ]),
+                                            ], width = 8),
+                                        dbc.Col(width=2)
+                                            
+                                    ]),
+                                   
+                                    dbc.Row([ 
+                                       dbc.Col(width=2), 
+
                                         dbc.Col([html.Iframe(
                                             sandbox='allow-scripts',
                                             id='plot_trend',
-                                            height='250',
-                                            width='600',
+                                            height='330',
+                                            width='800',
                                             style={'border-width': '0'},
 
-                                        srcDoc = make_trend().to_html()
+                                        srcDoc = make_trend().to_html(),
+                                        
                                             )
-                                        ]),
+                                        ], width = 4),
+                                       dbc.Col(        
+                                         dcc.Dropdown(
+                                        id='dd-chart-race',
+                                        options=[
+                                        {'label': 'Black', 'value': 'Black'},
+                                        {'label': 'White', 'value': 'White'},
+                                        {'label': 'Asian, Other', 'value': 'Asian, Other'},
+                                        {'label': 'Hispanic, White', 'value': 'Hispanic, White'},
+                                        {'label': 'No description', 'value': 'No description'},
+                                        {'label': 'Asian Indian', 'value': 'Asian Indian'},
+                                        {'label': 'Hispanic, Black', 'value': 'Hispanic, Black'},
+                                        {'label': 'Unknown', 'value': 'Unknown'},
+                                        {'label': 'Other', 'value': 'Other'},
+                                        {'label': 'Chinese', 'value': 'Chinese'},
+                                        {'label': 'Native American, Other', 'value': 'Native American, Other'},
+
+                                     ], value='White' ), width=2), 
+                                        dbc.Col(        
+                                        dcc.Dropdown(
+                                         id='dd-chart-place',
+                                         options=[
+                                        {'label': 'Hospital', 'value': 'Hospital'},
+                                        {'label': 'Residence', 'value': 'Residence'},
+                                        {'label': 'Other', 'value': 'Other'},
+                                        {'label': 'Nursing Home', 'value': 'Nursing Home'},
+                                        {'label': 'No description', 'value': 'No description'},
+                                        {'label': 'Convalescent Home', 'value': 'Convalescent Home'},
+                                        {'label': 'Hospice', 'value': 'Hospice'}
+                 
+                                    ],  value='Residence'), width=2),
                                         dbc.Col(width=2)
+                                       
                                     ]),
+
+                                
                                     dbc.Row([
-                                        dbc.Col(width=1),
-                                        dbc.Col([html.H3('The Killers'),overdose_combination_chart], width = 6),
-                                        dbc.Col([
+                                        dbc.Col(width=2),
+                                        dbc.Col([html.H3('The Killers'),overdose_combination_chart], width = 6)
+                                        ]),
+                                    
+                                    dbc.Row([ 
+                                        dbc.Col(width=2),
+                                        dbc.Col([html.P('This section allows you to view the drug involved in deaths by overdose :')], width = 4.5),                                     
+                                       dbc.Col([
                                             overdose_dropdown_1,
                                             html.Img(
                                                 id="drug_img",
                                                 src=set_image(),
                                                 height = '150',
                                                 width = '200'
-                                                ),
+                                                )
+                                            
+                                        ], width = 3),
+                                        dbc.Col(width=2)
+                                        ]),
+
+                                    dbc.Row([
+                                        dbc.Col(width=2),
+                                        dbc.Col([
                                             html.P(set_description(), id="drug_desc"),
                                             html.A(   
                                                 'This info was retrieved from drugbank.ca',
@@ -214,17 +268,17 @@ overdose_displacement = html.Div([
                                                 href=set_reference(),
                                                 target="_blank",
                                             )
-                                        ], width = 3),
-                                        dbc.Col(width=1)
+                                        ], width = 8),
+                                        dbc.Col(width=2)
                                     ]),
                                     dbc.Row([
-                                        dbc.Col(width=1),
+                                        dbc.Col(width=2),
                                         dbc.Col([html.H3('The Victims')], width = 6),
-                                        dbc.Col(width=1)
+                                        dbc.Col(width=2)
                                     ]),
                                     dbc.Row([
-                                        dbc.Col(width=1),
-                                        dbc.Col([html.P('This section refers to the demographics of the people who died from the selected drug')], width = 6),
+                                        dbc.Col(width=2),
+                                        dbc.Col([html.P('This section shows the social demographic effected by the selected drug')], width = 6),
                                         dbc.Col(width=1)
                                     ]),
                                     dbc.Row([
