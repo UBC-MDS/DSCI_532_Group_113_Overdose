@@ -162,6 +162,9 @@ def set_description(drug = base_drug):
     drug_description = description_df.loc[description_df['Drug'] == drug, 'Description'].iloc[0] 
     return drug_description
 
+def set_reference(drug = base_drug):
+    drug_link = description_df.loc[description_df['Drug'] == drug, 'Reference'].iloc[0] 
+    return drug_link
 ##Displacement Creation
 
 overdose_displacement = html.Div([
@@ -182,11 +185,11 @@ overdose_displacement = html.Div([
                                             dbc.Row()
                                             ]),
                                         dbc.Col([html.Iframe(
-                                        sandbox='allow-scripts',
-                                        id='plot_trend',
-                                        height='250',
-                                        width='600',
-                                        style={'border-width': '0'},
+                                            sandbox='allow-scripts',
+                                            id='plot_trend',
+                                            height='250',
+                                            width='600',
+                                            style={'border-width': '0'},
 
                                         srcDoc = make_trend().to_html()
                                             )
@@ -204,7 +207,13 @@ overdose_displacement = html.Div([
                                                 height = '150',
                                                 width = '200'
                                                 ),
-                                            html.P(set_description(), id="drug_desc")
+                                            html.P(set_description(), id="drug_desc"),
+                                            html.A(   
+                                                'This info was retrieved from drugbank.ca',
+                                                id="drug_ref",
+                                                href=set_reference(),
+                                                target="_blank",
+                                            )
                                         ], width = 3),
                                         dbc.Col(width=1)
                                     ]),
@@ -270,16 +279,23 @@ def update_text(drug_name):
 @app.callback(
     dash.dependencies.Output('plot_demog', 'srcDoc'),
     [dash.dependencies.Input('drug1_dropdown', 'value')])
-def update_plot(drug_name):
+def update_plot_demog(drug_name):
     updated_plot = make_demographics(drug_name).to_html()
     return updated_plot
 
 @app.callback(
     dash.dependencies.Output('plot_race', 'srcDoc'),
     [dash.dependencies.Input('drug1_dropdown', 'value')])
-def update_plot(drug_name):
+def update_plot_race(drug_name):
     updated_plot = make_race(drug_name).to_html()
     return updated_plot
+
+@app.callback(
+    dash.dependencies.Output('drug_ref', 'href'),
+    [dash.dependencies.Input('drug1_dropdown', 'value')])
+def update_link(drug_name):
+    updated_link = set_reference(drug_name)
+    return updated_link
 
 if __name__ == '__main__':
     app.run_server(debug=True)
