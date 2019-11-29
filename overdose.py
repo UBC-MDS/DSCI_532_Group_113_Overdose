@@ -93,19 +93,17 @@ def make_demographics(drug_name = base_drug):
     alt.themes.enable('mds_special')
     
     # Create a plot of the Displacement and the Horsepower of the cars dataset
-    data = pivoted_data
-    query = data.query(drug_name + ' == 1')
+    query = pivoted_data.query(drug_name + ' == 1')
     chart = alt.Chart(query)
-    age = chart.mark_bar().encode(
-        alt.X("Age:Q", title = "Age", bin=alt.Bin(maxbins=50)),
-        y='count()'
-    ).properties(title='Age distribution for ' + drug_name, width=500, height=350)
+    age = chart.mark_bar(color = "#3f7d4e").encode(
+        x = alt.X("Age:Q", title = "Age", bin=alt.Bin(maxbins=10)),
+        y = 'count()'
+    ).properties(title='Age distribution for ' + drug_name, width=300, height=200)
     gender = chart.mark_bar().encode(
-        alt.X("Sex:N", title = "Gender"),
-        alt.Color('Sex:N'),
-        y='count()'
-    ).properties(title='Gender distribution for ' + drug_name, width=500, height=350)
-
+        x = alt.X("Sex:N", title = "Sex"),
+        y='count()',
+        color = alt.Color('Sex:N', scale=alt.Scale(scheme='viridis')),
+    ).properties(title='Gender distribution for ' + drug_name, width=200, height=200)
     return (age | gender)
 
 def make_trend(race = 'Everything', place = 'Everything'):
@@ -129,6 +127,15 @@ def make_trend(race = 'Everything', place = 'Everything'):
             title = "  Trend") 
 
     return (trend_AFTER)
+
+def make_race(drug_name = base_drug): 
+    query = pivoted_data.query(drug_name + ' == 1')
+    race = alt.Chart(query).mark_bar().encode(
+        x = alt.X("Race:N", title = "Race", axis=alt.AxisConfig(labelAngle=45)),
+        y='count()',
+        color = alt.Color('Race:N', scale=alt.Scale(scheme='viridis'))
+    ).properties(title='Race distribution for ' + drug_name, width=400, height=180) 
+    return race
 
 overdose_title = html.H3("Overdash - Accidental overdose victims and the drugs that killed them",className="uppercase title",)
 overdose_title_span = html.Span("A dashboard about accidental overdose deaths in Connecticut from 2012 to 2018")
@@ -202,15 +209,38 @@ overdose_displacement = html.Div([
                                         dbc.Col(width=1)
                                     ]),
                                     dbc.Row([
-                                        html.Iframe(
-                                        sandbox='allow-scripts',
-                                        id='plot_demog',
-                                        height='500',
-                                        width='1200',
-                                        style={'border-width': '0'},
-
-                                        srcDoc = make_demographics().to_html()
-                                        ),
+                                        dbc.Col(width=1),
+                                        dbc.Col([html.H3('The Victims')], width = 6),
+                                        dbc.Col(width=1)
+                                    ]),
+                                    dbc.Row([
+                                        dbc.Col(width=1),
+                                        dbc.Col([html.P('This section refers to the demographics of the people who died from the selected drug')], width = 6),
+                                        dbc.Col(width=1)
+                                    ]),
+                                    dbc.Row([
+                                        dbc.Col(width=3),
+                                        dbc.Col([html.Iframe(
+                                                    sandbox='allow-scripts',
+                                                    id='plot_demog',
+                                                    height='320',
+                                                    width='1000',
+                                                    style={'border-width': '0'},
+                                                    srcDoc = make_demographics().to_html()
+                                            )], width = 6),
+                                        dbc.Col(width=3)
+                                    ]),
+                                    dbc.Row([
+                                        dbc.Col(width=4),
+                                        dbc.Col([html.Iframe(
+                                                    sandbox='allow-scripts',
+                                                    id='plot_race',
+                                                    height='350',
+                                                    width='800',
+                                                    style={'border-width': '0'},
+                                                    srcDoc =make_race().to_html()
+                                            )], width = 4),
+                                        dbc.Col(width=4)
                                     ])
                                 ])
                   
@@ -237,6 +267,19 @@ def update_text(drug_name):
     updated_text = set_description(drug_name)
     return updated_text
 
+@app.callback(
+    dash.dependencies.Output('plot_demog', 'srcDoc'),
+    [dash.dependencies.Input('drug1_dropdown', 'value')])
+def update_plot(drug_name):
+    updated_plot = make_demographics(drug_name).to_html()
+    return updated_plot
+
+@app.callback(
+    dash.dependencies.Output('plot_race', 'srcDoc'),
+    [dash.dependencies.Input('drug1_dropdown', 'value')])
+def update_plot(drug_name):
+    updated_plot = make_race(drug_name).to_html()
+    return updated_plot
 
 if __name__ == '__main__':
     app.run_server(debug=True)
