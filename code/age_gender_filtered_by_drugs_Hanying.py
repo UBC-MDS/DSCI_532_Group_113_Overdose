@@ -10,8 +10,9 @@ app = dash.Dash(__name__, assets_folder='assets')
 server = app.server
 
 app.title = 'Dash app with pure Altair HTML'
+data = pd.read_csv("../data/2012-2018_lab4_data_drug-overdose-deaths-connecticut-wrangled-pivot.csv")
 
-def make_plot(drug_name = "Amphet"):
+def make_age_gender(drug_name = "Amphet"):
     def mds_special():
         font = "Arial"
         axisColor = "#000000"
@@ -72,35 +73,49 @@ def make_plot(drug_name = "Amphet"):
     alt.themes.enable('mds_special')
     
     # Create a plot of the Displacement and the Horsepower of the cars dataset
-    data = pd.read_csv("data/2012-2018_lab4_data_drug-overdose-deaths-connecticut-wrangled-pivot.csv")
     query = data.query(drug_name + ' == 1')
     chart = alt.Chart(query)
-    age = chart.mark_bar().encode(
-        alt.X("Age:Q", title = "Age", bin=alt.Bin(maxbins=50)),
-        y='count()'
-    ).properties(title='Age distribution for ' + drug_name, width=500, height=350)
+    age = chart.mark_bar(color = "#3f7d4e").encode(
+        x = alt.X("Age:Q", title = "Age", bin=alt.Bin(maxbins=10)),
+        y = 'count()'
+    ).properties(title='Age distribution for ' + drug_name, width=300, height=200)
     gender = chart.mark_bar().encode(
-        alt.X("Sex:N", title = "Gender"),
-        alt.Color('Sex:N'),
-        y='count()'
-    ).properties(title='Gender distribution for ' + drug_name, width=500, height=350)
-
+        x = alt.X("Sex:N", title = "Sex"),
+        y='count()',
+        color = alt.Color('Sex:N', scale=alt.Scale(scheme='viridis')),
+    ).properties(title='Gender distribution for ' + drug_name, width=200, height=200)
     return (age | gender)
+
+def make_race(drug_name = "Amphet"): 
+    query = data.query(drug_name + ' == 1')
+    race = alt.Chart(query).mark_bar().encode(
+        x = alt.X("Race:N", title = "Race", axis=alt.AxisConfig(labelAngle=45)),
+        y='count()',
+        color = alt.Color('Race:N', scale=alt.Scale(scheme='viridis'))
+    ).properties(title='Race distribution for ' + drug_name, width=400, height=180) 
+    return race
 
 app.layout = html.Div([
 
-    html.H1("Age & Gender"),
-
     html.Iframe(
         sandbox='allow-scripts',
-        id='plot',
-        height='500',
+        id='plot_1',
+        height='350',
         width='1200',
         style={'border-width': '0'},
 
-        srcDoc = make_plot().to_html()
+        srcDoc = make_age_gender().to_html()
         ),
 
+    html.Iframe(
+        sandbox='allow-scripts',
+        id='plot_2',
+        height='350',
+        width='1200',
+        style={'border-width': '0'},
+
+        srcDoc = make_race().to_html()
+        ),
     dcc.Dropdown(
     id='drugs',
     options=[
@@ -127,13 +142,17 @@ app.layout = html.Div([
             ),
 ])
 @app.callback(
-    dash.dependencies.Output('plot', 'srcDoc'),
+    dash.dependencies.Output('plot_1', 'srcDoc'),
     [dash.dependencies.Input('drugs', 'value')])
 def update_plot(drug_name):
-    '''
-    Takes in an xaxis_column_name and calls make_plot to update our Altair figure
-    '''
-    updated_plot = make_plot(drug_name).to_html()
+    updated_plot = make_age_gender(drug_name).to_html()
+    return updated_plot
+
+@app.callback(
+    dash.dependencies.Output('plot_2', 'srcDoc'),
+    [dash.dependencies.Input('drugs', 'value')])
+def update_plot(drug_name):
+    updated_plot = make_race(drug_name).to_html()
     return updated_plot
 if __name__ == '__main__':
     app.run_server(debug=True)
