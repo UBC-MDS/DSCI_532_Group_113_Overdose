@@ -25,7 +25,7 @@ server = app.server
 
 description_df = pd.read_excel("data/lab4_drug-description.xlsx", sheet_name = 'lab4_drug-description')
 
-pivoted_data = pd.read_csv(data_path.joinpath("data/2012-2018_lab4_data_drug-overdose-deaths-connecticut-wrangled-pivot.csv"))
+pivoted_data = pd.read_csv("data/2012-2018_lab4_data_drug-overdose-deaths-connecticut-wrangled-pivot.csv")
 
 base_drug = 'Heroin'
 
