@@ -4,7 +4,7 @@
 
 Overdash is a visualization app that is designed to provide insights into the rising deaths by accidental overdose in Connecticut from 2012 to 2019. It assists health professional, law enforcement professionals and policymaker by providing a visual representation of this crisis. 
 
-In the forefront of the app, there is a line plot which shows the prevalenceof accidental overdose in Connecticut by displaying the count of people diedfrom accidental overdose from 2012 to 2018, the rising trend shows the motivation behind building this app. The user can filter the plot by choosing therace of the victim and the place where the victim was found dead.
+In the forefront of the app, there is a line plot which shows the prevalence of accidental overdose in Connecticut by displaying the count of people died from accidental overdose from 2012 to 2018, the rising trend shows the motivation behind building this app. The user can filter the plot by choosing the race of the victim and the place where the victim was found dead.
 
 The app then proceeds into two sections: " The Killer" section is where users interested in answering questions about the most lethal drugs. Two plots are provided here; a bar chart and a heat map. The bar chart is an effective choice here since it gives a fast glimpse into the ranking of the toxicity test results. The heatmap reflects toxicity tests results in which two drugs tested positive.
 
