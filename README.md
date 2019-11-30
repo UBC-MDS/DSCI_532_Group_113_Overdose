@@ -5,7 +5,7 @@ The landing page of the App is with a title of our research question and the tim
  
 ## Sketch
 
-**Skecth representation**
+**Sketch representation**
 
-![](imgs/532_Group-133-sketch.jpg)
+![](imgs/final_interface.png)
 
