@@ -143,7 +143,7 @@ def make_race(drug_name = base_drug):
     ).properties(title='Race distribution for ' + drug_name, width=400, height=180) 
     return race
 
-overdose_title = html.H3("Overdash - Accidental overdose victims by drugs type ",className="uppercase title",)
+overdose_title = html.H3("Accidental overdose victims by drugs type ",className="uppercase title",)
 overdose_title_span = html.Span("A dashboard showing deaths by accidental overdose in Connecticut from 2012 to 2018")
 overdose_combination_chart = html.Iframe(sandbox='allow-scripts',
                                             id='plot',
@@ -210,6 +210,7 @@ overdose_displacement = html.Div([
                                         dbc.Col( width=2),
                                         dbc.Col([
                                             dbc.Jumbotron([
+                                                html.H1("Overdash"),
                                                 overdose_title, 
                                                 overdose_title_span])], width = 8),
                                         dbc.Col(width=2)
@@ -341,7 +342,7 @@ def update_plot_race(drug_name):
     dash.dependencies.Output('plot_trend', 'srcDoc'),
     [dash.dependencies.Input('dd-chart-race', 'value'),
     dash.dependencies.Input('dd-chart-place', 'value')])
-def update_plot_race(race, place):
+def update_plot_trend(race, place):
     updated_plot = make_trend(race, place).to_html()
     return updated_plot
 
