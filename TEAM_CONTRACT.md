@@ -14,6 +14,9 @@ The rubrics of the contract are the following:
 -	Team members must meet on Mondays from 1:30 p.m. to 2:00 p.m. to go through the points of the lab and set the outline for the work of the week. During this meeting, responsibilities will be assigned.
 -	The second meeting of the week will be held during the lab session (Thursdays from 2:00 p.m. to 4:00 p.m.). This timeslot will be used to share questions, struggles and results, and to brainstorm ideas for the project.
 
+**Responsibilities**
+-   At Monday's meeting, each of the team members is going to be assigned to a section of the dasboard. Then, one person is assigned to create the template. This way, for the rest of the week, the team members are going to work in their section so that on thursdays everything can be merged.
+
 **Deadlines**
 -	In order to allow flexible working times, Saturday 12:00 noon will be the official deadline for the work. Team members are still expected to work through the week and to constantly communicate.
 
