@@ -5,6 +5,7 @@ import dash_html_components as html
 import dash_core_components as dcc
 import altair as alt
 import vega_datasets
+import gunicorn
 
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
@@ -241,7 +242,6 @@ overdose_displacement = html.Div([
                                             )])
                                         ], width = 5),
                                         dbc.Col(width=3)
-                                       
                                     ]),
 
                                 
