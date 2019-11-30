@@ -7,5 +7,5 @@ The landing page of the App is with a title of our research question and the tim
 
 **Sketch representation**
 
-![](imgs/final_interface.jpg)
+![](imgs/final_interface.png)
 
