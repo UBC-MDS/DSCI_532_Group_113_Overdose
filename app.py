@@ -1,11 +1,10 @@
 import dash
 import pandas as pd
-import pathlib
 import dash_html_components as html
 import dash_core_components as dcc
 import altair as alt
 import vega_datasets
-import gunicorn
+
 
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
@@ -23,11 +22,10 @@ server = app.server
 
 ##Objects creation
 
-data_path = pathlib.Path(__file__).parent.joinpath("data").resolve()
 
-description_df = pd.read_excel(data_path.joinpath("lab4_drug-description.xlsx"), sheet_name = 'lab4_drug-description')
+description_df = pd.read_excel("data/lab4_drug-description.xlsx", sheet_name = 'lab4_drug-description')
 
-pivoted_data = pd.read_csv(data_path.joinpath("2012-2018_lab4_data_drug-overdose-deaths-connecticut-wrangled-pivot.csv"))
+pivoted_data = pd.read_csv(data_path.joinpath("data/2012-2018_lab4_data_drug-overdose-deaths-connecticut-wrangled-pivot.csv"))
 
 base_drug = 'Heroin'
 
