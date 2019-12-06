@@ -92,19 +92,20 @@ def make_demographics(drug_name = base_drug):
     alt.themes.enable('mds_special')
     
     # Create plots
+    sub_data = pivoted_data.query("Sex == 'Male' | Sex == 'Female'")
     if drug_name == 'Everything':
-        query = pivoted_data
+        query = sub_data
     else:
-        query = pivoted_data.query(drug_name + ' == 1')
+        query = sub_data.query(drug_name + ' == 1')
     chart = alt.Chart(query)
     age = chart.mark_bar(color = "#3f7d4e").encode(
-        x = alt.X("Age:Q", title = "Age", bin=alt.Bin(maxbins=10)),
+        x = alt.X("Age:Q", title = "Age", bin=alt.Bin(maxbins=10), axis=alt.AxisConfig(labelAngle=-45)),
         y = 'count()'
     ).properties(title='Age distribution for ' + drug_name, width=300, height=200)
     gender = chart.mark_bar().encode(
-        x = alt.X("Sex:N", title = "Sex"),
+        x = alt.X("Sex:N", title = "Sex", axis=alt.AxisConfig(labelAngle=-45)),
         y='count()',
-        color = alt.Color('Sex:N', scale=alt.Scale(scheme='viridis')),
+        color = alt.Color('Sex:N', scale=alt.Scale(scheme='viridis'),legend=None)
     ).properties(title='Gender distribution for ' + drug_name, width=200, height=200)
     return (age | gender)
 
@@ -115,9 +116,9 @@ def make_race(drug_name = base_drug):
     else:
         query = pivoted_data.query(drug_name + ' == 1')
     race = alt.Chart(query).mark_bar().encode(
-        x = alt.X("Race:N", title = "Race", axis=alt.AxisConfig(labelAngle=45)),
+        x = alt.X("Race:N", title = "Race", axis=alt.AxisConfig(labelAngle=-45)),
         y='count()',
-        color = alt.Color('Race:N', scale=alt.Scale(scheme='viridis'))
+        color = alt.Color('Race:N', scale=alt.Scale(scheme='viridis'),legend=None)
     ).properties(title='Race distribution for ' + drug_name, width=400, height=180) 
     return race
 
