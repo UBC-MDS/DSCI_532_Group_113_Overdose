@@ -91,7 +91,7 @@ def make_demographics(drug_name = base_drug):
     # enable the newly registered theme
     alt.themes.enable('mds_special')
     
-    # Create a plot of the Displacement and the Horsepower of the cars dataset
+    # Create plots
     if drug_name == 'Everything':
         query = pivoted_data
     else:
@@ -108,27 +108,6 @@ def make_demographics(drug_name = base_drug):
     ).properties(title='Gender distribution for ' + drug_name, width=200, height=200)
     return (age | gender)
 
-def make_trend(race = 'Everything', place = 'Everything'):
-    if race == 'Everything' and place == 'Everything':
-        by_race_place_p = pivoted_data
-    elif race == 'Everything':
-        by_race_place_p = pivoted_data[(pivoted_data['Location']==place)]
-    elif place == 'Everything':
-        by_race_place_p = pivoted_data[( pivoted_data['Race']==race)]
-    else:
-        by_race_place_p = pivoted_data[( pivoted_data['Race']==race) & ( pivoted_data['Location']==place)] # FOR THE LINE CHART
-
-    trend_AFTER = alt.Chart(by_race_place_p).mark_line(color = "#140040", point = True).encode(
-            alt.X('year(Date):O', title = 'Year'),
-            alt.Y('count()', title = 'Count'),
-            tooltip = [alt.Tooltip('year(Date)', title = 'Year'),
-                       alt.Tooltip('count()', title = 'Count of people')]
-        ).properties(
-            width = 430,
-            height = 200,
-            title = "  Trend") 
-
-    return (trend_AFTER)
 
 def make_race(drug_name = base_drug): 
     if drug_name == 'Everything':
@@ -222,26 +201,6 @@ overdose_displacement = html.Div([
                                             ], width = 8),
                                         dbc.Col(width=2)       
                                     ]),                                 
-                                    dbc.Row([ 
-                                       dbc.Col(width=4),
-                                        dbc.Col([
-                                            dbc.Row([html.H6("Select the race of the victim: ")]),
-                                            overdose_dropdown_race,
-                                            dbc.Row([html.H6("Select the place where the victim was found dead: ")]),
-                                            overdose_dropdown_place,
-                                            dbc.Row([html.Iframe(
-                                            sandbox='allow-scripts',
-                                            id='plot_trend',
-                                            height='330',
-                                            width='800',
-                                            style={'border-width': '0'},
-                                            srcDoc = make_trend().to_html(),
-                                        
-                                            )])
-                                        ], width = 5),
-                                        dbc.Col(width=3)
-                                    ]),
-
                                 
                                     dbc.Row([
                                             dbc.Col(width = 1),
@@ -334,14 +293,6 @@ def update_plot_demog(drug_name):
     [dash.dependencies.Input('drug1_dropdown', 'value')])
 def update_plot_race(drug_name):
     updated_plot = make_race(drug_name).to_html()
-    return updated_plot
-
-@app.callback(
-    dash.dependencies.Output('plot_trend', 'srcDoc'),
-    [dash.dependencies.Input('dd-chart-race', 'value'),
-    dash.dependencies.Input('dd-chart-place', 'value')])
-def update_plot_trend(race, place):
-    updated_plot = make_trend(race, place).to_html()
     return updated_plot
 
 
