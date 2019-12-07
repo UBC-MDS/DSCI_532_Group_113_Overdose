@@ -1,9 +1,9 @@
 # DSCI_532_Group_113_Overdose
+[Overdose App](https://group-113-overdose.herokuapp.com/)
 
 ## Description
 The landing page of the App starts with some general information of our dataset: 
-- the header with "Accidental overdose victims by drugs type" is explaining the main research question this dashboard answers;
-- under the header, users can observe the trend of overdose deaths over 7 years. Users can also filter with races and places where death found to see the specific trend for different groups of people.
+- the header with "Accidental overdose victims by drugs type" is explaining the main research question this dashboard answers
 
 After the general information, the main body of the app is divided into two parts: "The killers" and "The victims", which allows users to explore the dataset from different aspects.
 
