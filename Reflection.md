@@ -21,3 +21,16 @@ The app description in the README file was updated accordingly.  By filtering th
 How we addressed the feedback (GitHub issues) peers: 
 Mainly through commenting in commits and pull requests.
 
+## Responding to peer-review issues raised during the feedback session :
+
+The feedback we received during the feedback session was mostly positive and in general, has lead to the improvement of the app in terms of usability and visualization tools contained. Easiness of using the app was the primary concern that was noted. The reviewers also advised the group to remove that the line plot since it is less effective than other the other plots in the app. Also, there were multiple comments about the inclusion of a link to the app in the repo readme file so has also been implemented. One of the constructive comments as well that were the received was regarding the aesthetic of the plots such as making the plot titles consistent which was also carried out.  There were some comments about reducing the heat map to half and change its colour; however, due to the time limitation, this was postponed for future implementation.
+
+## TA comments on milestone 2 #42 :
+
+Also, we are going to implement TA comments that mentioned in issue #42 . The following will be our actions points : 
+- Extended description of the commits
+- Comment on issues
+- Add description of the app at the beginning
+- Cite the data source
+
+
