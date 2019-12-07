@@ -14,4 +14,4 @@ Then, in the "victims" part, users can continue exploring the victims of the sel
 ## Sketch
 
 **Sketch representation**
-
+![](imgs/final_interface.png)
