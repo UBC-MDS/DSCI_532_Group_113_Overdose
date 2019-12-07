@@ -1,17 +1,17 @@
+## Importing dependencies
+
 import dash
 import pandas as pd
 import dash_html_components as html
 import dash_core_components as dcc
 import altair as alt
 import vega_datasets
-
-
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
-
 import dash_bootstrap_components as dbc
-
 alt.data_transformers.disable_max_rows()
+
+## Initating the app
 
 app = dash.Dash(
     __name__,
@@ -20,18 +20,34 @@ app = dash.Dash(
 )
 server = app.server
 
-##Objects creation
+## Objects creation 
 
+description_df = pd.read_excel("data/lab4_drug-description.xlsx", sheet_name = 'lab4_drug-description') # importing the data 
 
-description_df = pd.read_excel("data/lab4_drug-description.xlsx", sheet_name = 'lab4_drug-description')
+pivoted_data = pd.read_csv("data/2012-2018_lab4_data_drug-overdose-deaths-connecticut-wrangled-pivot.csv") # importing the data
 
-pivoted_data = pd.read_csv("data/2012-2018_lab4_data_drug-overdose-deaths-connecticut-wrangled-pivot.csv")
-
-base_drug = 'Heroin'
+base_drug = 'Heroin' # making the deafult selection
 
 number_of_people, size_table = pivoted_data.shape
 
 def make_demographics(drug_name = base_drug):
+    """
+    Contains the mds theme and creates two bar plots relating the age and the gender of the victims to the specific drug
+    and returns two plots age and gender 
+
+    Parameters
+    ----------
+    drug_name : Chosen from from the dropdown menu
+        
+    Returns
+    -------
+    Plots: age | gender
+    
+
+    Examples
+    --------
+    >>> make_demographics(drug_name = 'Heroin')
+    """
     def mds_special():
         font = "Arial"
         axisColor = "#000000"
@@ -85,13 +101,13 @@ def make_demographics(drug_name = base_drug):
             }
                 }
 
-    # register the custom theme under a chosen name
+    # Register the custom theme under a chosen name
     alt.themes.register('mds_special', mds_special)
 
-    # enable the newly registered theme
+    # Enable the newly registered theme
     alt.themes.enable('mds_special')
     
-    # Create plots
+    # Creat plots
     sub_data = pivoted_data.query("Sex == 'Male' | Sex == 'Female'")
     if drug_name == 'Everything':
         query = sub_data
@@ -111,6 +127,23 @@ def make_demographics(drug_name = base_drug):
 
 
 def make_race(drug_name = base_drug): 
+    """
+    Ceates bar plot relating the race of the victims to the specific drug
+    and returns bar plot race 
+
+    Parameters
+    ----------
+    drug_name : Chosen from from the dropdown menu
+        
+    Returns
+    -------
+    Plots: race
+    
+
+    Examples
+    --------
+    >>> ake_demographics(drug_name = 'Heroin')
+    """
     if drug_name == 'Everything':
         query = pivoted_data
     else:
@@ -171,19 +204,41 @@ overdose_dropdown_place = dcc.Dropdown(
 
 main_text = 'From 2012 to 2018, '+ str(number_of_people) +' deaths occurred due to accidental overdose in Connecticut. This dashboard was created with the intent to provide a visual representation of the crisis'
 
+
 def set_image(drug = base_drug):
+    """
+    Ceates image link for the specific drug chosen from the dropdown menu
+    
+    Returns
+    -------
+    Image : img_link
+    """
     img_link = description_df.loc[description_df['Drug'] == drug, 'Link'].iloc[0]
     return img_link
 
 def set_description(drug = base_drug):
+    """
+    Ceates drug description for the specific drug chosen from the dropdown menu
+    
+    Returns
+    -------
+    Text : drug_description
+    """
     drug_description = description_df.loc[description_df['Drug'] == drug, 'Description'].iloc[0] 
     return drug_description
 
 def set_reference(drug = base_drug):
+    """
+    Ceates drug drug link for the specific drug chosen from the dropdown menu
+    
+    Returns
+    -------
+    Link: drug_link
+    """
     drug_link = description_df.loc[description_df['Drug'] == drug, 'Reference'].iloc[0] 
     return drug_link
-##Displacement Creation
 
+## Displacement Creation
 overdose_displacement = html.Div([
                                     dbc.Row([   
                                         dbc.Col( width=2),
@@ -262,8 +317,10 @@ overdose_displacement = html.Div([
                                 ])
                   
 
+## layout of the app
 app.layout = dbc.Container([overdose_displacement], fluid= True)
 
+## callback section
 @app.callback(
     dash.dependencies.Output('drug_img', 'src'),
     [dash.dependencies.Input('drug1_dropdown', 'value')])
@@ -279,7 +336,7 @@ def update_img(drug_name):
     [dash.dependencies.Input('drug1_dropdown', 'value')])
 def update_text(drug_name):
     '''
-    Takes in an xaxis_column_name and calls make_plot to update our Altair figure
+    Updates set_description function with the new drug_name entered by the user
     '''
     updated_text = set_description(drug_name)
     return updated_text
@@ -288,6 +345,9 @@ def update_text(drug_name):
     dash.dependencies.Output('plot_demog', 'srcDoc'),
     [dash.dependencies.Input('drug1_dropdown', 'value')])
 def update_plot_demog(drug_name):
+    '''
+    Updates make_demographics function with the new drug_name entered by the user
+    '''
     updated_plot = make_demographics(drug_name).to_html()
     return updated_plot
 
@@ -295,14 +355,19 @@ def update_plot_demog(drug_name):
     dash.dependencies.Output('plot_race', 'srcDoc'),
     [dash.dependencies.Input('drug1_dropdown', 'value')])
 def update_plot_race(drug_name):
+    '''
+    Updates make_race function with the new drug_name entered by the user
+    '''
     updated_plot = make_race(drug_name).to_html()
     return updated_plot
-
 
 @app.callback(
     dash.dependencies.Output('drug_ref', 'href'),
     [dash.dependencies.Input('drug1_dropdown', 'value')])
 def update_link(drug_name):
+    '''
+    Updates  set_reference function with the new drug_name entered by the user
+    '''
     updated_link = set_reference(drug_name)
     return updated_link
 
