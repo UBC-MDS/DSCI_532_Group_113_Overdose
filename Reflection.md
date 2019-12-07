@@ -23,11 +23,13 @@ Mainly through commenting in commits and pull requests.
 
 ## Responding to peer-review issues raised during the feedback session :
 
+
 The feedback we received during the feedback session was mostly positive and in general, has lead to the improvement of the app in terms of usability and visualization tools contained. Easiness of using the app was the primary concern that was noted. The reviewers also advised the group to remove that the line plot since it is less effective than other the other plots in the app. Also, there were multiple comments about the inclusion of a link to the app in the repo readme file so has also been implemented.
 
 One of the constructive comments as well that were the received was regarding the aesthetic of the plots such as making the plot titles consistent. According to that, we did several modifications as: adjust the angle of all the axis labels to make them consistent, remove the legends for gender and race plot as they are redundant and remove the "no description"s and "other"s from the gender plot as they did not provide much useful information.
 
 There were some comments about reducing the heat map to half and change its colour; however, due to the time limitation, this was postponed for future implementation.
+
 
 ## TA comments on milestone 2 #42 :
 
